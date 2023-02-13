@@ -9,23 +9,9 @@ jobs:
     - run:
         name: Sign Studio
         command: |
-          security create-keychain -p "" ~/Library/Keychains/MyKeychain.keychain
-          security default-keychain -s ~/Library/Keychains/MyKeychain.keychain
-          security unlock-keychain -p "" ~/Library/Keychains/MyKeychain.keychain
-          security set-keychain-settings -t 7200 -l ~/Library/Keychains/MyKeychain.keychain
-          security list-keychains -d user
-          echo $APPLE_CERT_DEV_ID_APP_BASE64 | base64 -D -o DevIdApplication.p12
-          security import ./DevIdApplication.p12 -k ~/Library/Keychains/MyKeychain.keychain -P "$APPLE_CERT_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security -T /usr/bin/pkgbuild
-          security find-identity -p codesigning
-          security set-key-partition-list -S apple-tool:,apple: -s -k '' ~/Library/Keychains/MyKeychain.keychain
-          wget https://convertigo-ci.s3-eu-west-3.amazonaws.com/convertigo-15061-develop-8.2.0-beta/convertigo-studio-8.2.0-beta-macosx-arm.tar.gz
-          tar -xf convertigo-studio-8.2.0-beta-macosx-arm.tar.gz
-          codesign --force -s "Developer ID Application: Convertigo (FKA4E5M74L)" convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app -v
-          pkgbuild --root convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app --identifier "com.convertigo.studio.pkg" --version "8.2.0-beta" --install-location "/Applications/Convertigo/" ConvertigoStudio.pkg
           mkdir -p DIST/convertigo-15061-develop-8.2.0-beta
-          mv ConvertigoStudio.pkg DIST/convertigo-15061-develop-8.2.0-beta/convertigo-studio-8.2.0-beta-macosx-arm.pkg
+          date > DIST/convertigo-15061-develop-8.2.0-beta/date.txt
     - aws-s3/sync:
-        arguments: |
-          --acl public-read
+        arguments: --help
         from: DIST
         to: 's3://convertigo-ci'
