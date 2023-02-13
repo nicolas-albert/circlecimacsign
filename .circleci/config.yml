@@ -23,7 +23,7 @@ jobs:
           codesign --force -s "Developer ID Application: Convertigo (FKA4E5M74L)" convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app -v
           pkgbuild --root convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app --identifier "com.convertigo.studio.pkg" --version "8.2.0-beta" --install-location "/Applications/Convertigo/" ConvertigoStudio.pkg
           mkdir convertigo-15061-develop-8.2.0-beta
-          mv ConvertigoStudio.pkg convertigo-15061-develop-8.2.0-beta/convertigo-15061-develop-8.2.0-beta/convertigo-studio-8.2.0-beta-macosx-arm.pkg
+          mv ConvertigoStudio.pkg convertigo-15061-develop-8.2.0-beta/convertigo-studio-8.2.0-beta-macosx-arm.pkg
     - run:
         name: S3 Upload
         command: |
