@@ -22,7 +22,7 @@ jobs:
           tar -xf convertigo-studio-8.2.0-beta-macosx-arm.tar.gz
           codesign --force -s "Developer ID Application: Convertigo (FKA4E5M74L)" convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app -v
           pkgbuild --root convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app --identifier "com.convertigo.studio.pkg" --version "8.2.0-beta" --install-location "/Applications/Convertigo/" ConvertigoStudio.pkg
-          mkdir -P DIST/convertigo-15061-develop-8.2.0-beta
+          mkdir -p DIST/convertigo-15061-develop-8.2.0-beta
           mv ConvertigoStudio.pkg DIST/convertigo-15061-develop-8.2.0-beta/convertigo-studio-8.2.0-beta-macosx-arm.pkg
     - aws-s3/sync:
         arguments: |
