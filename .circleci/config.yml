@@ -22,9 +22,11 @@ jobs:
           tar -xf convertigo-studio-8.2.0-beta-macosx-arm.tar.gz
           codesign --force -s "Developer ID Application: Convertigo (FKA4E5M74L)" convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app -v
           pkgbuild --root convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app --identifier "com.convertigo.studio.pkg" --version "8.2.0-beta" --install-location "/Applications/Convertigo/" ConvertigoStudio.pkg
-          mkdir convertigo-15061-develop-8.2.0-beta
-          mv ConvertigoStudio.pkg convertigo-15061-develop-8.2.0-beta/convertigo-studio-8.2.0-beta-macosx-arm.pkg
-    - run:
-        name: S3 Upload
-        command: |
-          aws s3 sync --storage-class REDUCED_REDUNDANCY --acl public-read convertigo-15061-develop-8.2.0-beta s3://convertigo-ci/convertigo-15061-develop-8.2.0-beta
+          mkdir -P DIST/convertigo-15061-develop-8.2.0-beta
+          mv ConvertigoStudio.pkg DIST/convertigo-15061-develop-8.2.0-beta/convertigo-studio-8.2.0-beta-macosx-arm.pkg
+    - aws-s3/sync:
+        arguments: |
+          --acl public-read \
+          --storage-class REDUCED_REDUNDANCY
+        from: DIST
+        to: 's3://convertigo-ci'
