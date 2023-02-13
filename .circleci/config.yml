@@ -26,7 +26,6 @@ jobs:
           mv ConvertigoStudio.pkg DIST/convertigo-15061-develop-8.2.0-beta/convertigo-studio-8.2.0-beta-macosx-arm.pkg
     - aws-s3/sync:
         arguments: |
-          --acl public-read \
-          --storage-class REDUCED_REDUNDANCY
+          --acl public-read
         from: DIST
         to: 's3://convertigo-ci'
