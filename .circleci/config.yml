@@ -19,10 +19,21 @@ jobs:
           security import ./DevIdApplication.p12 -k ~/Library/Keychains/MyKeychain.keychain -P "$APPLE_CERT_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security -T /usr/bin/pkgbuild
           security find-identity -p codesigning
           security set-key-partition-list -S apple-tool:,apple: -s -k '' ~/Library/Keychains/MyKeychain.keychain
+          
+          mkdir -p DIST/convertigo-15061-develop-8.2.0-beta
+          
           wget https://convertigo-ci.s3-eu-west-3.amazonaws.com/convertigo-15061-develop-8.2.0-beta/convertigo-studio-8.2.0-beta-macosx-arm.tar.gz
           tar -xf convertigo-studio-8.2.0-beta-macosx-arm.tar.gz
-          codesign --force -s "Developer ID Application: Convertigo (FKA4E5M74L)" convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app -v
-          pkgbuild --root convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app --identifier "com.convertigo.studio.pkg" --version "8.2.0-beta" --install-location "/Applications/Convertigo/" ConvertigoStudio.pkg
-          mkdir -p DIST/convertigo-15061-develop-8.2.0-beta
-          mv ConvertigoStudio.pkg DIST/convertigo-15061-develop-8.2.0-beta/convertigo-studio-8.2.0-beta-macosx-arm.pkg
+          sed -e "s,.studio<,.studio.arm64<," -i.bak convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app/Contents/Info.plist
+          rm convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app/Contents/Info.plist.bak
+          codesign --deep --force -s "Developer ID Application: Convertigo (FKA4E5M74L)" convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app -v
+          pkgbuild --component convertigo-studio-8.2.0-beta-macosx-arm/ConvertigoStudio.app --install-location "/Applications" DIST/convertigo-15061-develop-8.2.0-beta/convertigo-studio-8.2.0-beta-macosx-arm.pkg
+          
+          wget https://convertigo-ci.s3-eu-west-3.amazonaws.com/convertigo-15061-develop-8.2.0-beta/convertigo-studio-8.2.0-beta-macosx.tar.gz
+          tar -xf convertigo-studio-8.2.0-beta-macosx.tar.gz
+          sed -e "s,.studio<,.studio.x86_64<," -i.bak convertigo-studio-8.2.0-beta-macosx/ConvertigoStudio.app/Contents/Info.plist
+          rm convertigo-studio-8.2.0-beta-macosx/ConvertigoStudio.app/Contents/Info.plist.bak
+          codesign --deep --force -s "Developer ID Application: Convertigo (FKA4E5M74L)" convertigo-studio-8.2.0-beta-macosx/ConvertigoStudio.app -v
+          pkgbuild --component convertigo-studio-8.2.0-beta-macosx/ConvertigoStudio.app --install-location "/Applications" DIST/convertigo-15061-develop-8.2.0-beta/convertigo-studio-8.2.0-beta-macosx-x86_64.pkg
+          
           aws s3 sync --storage-class REDUCED_REDUNDANCY --acl public-read DIST s3://convertigo-ci/
