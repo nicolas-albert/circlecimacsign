@@ -7,6 +7,7 @@ jobs:
       xcode: 14.2.0
     steps:
     - aws-cli/setup
+    - checkout
     - run:
         name: Sign Studio
         command: |
